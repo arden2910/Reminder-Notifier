@@ -1,0 +1,28 @@
+{
+  "reminders": [
+    {
+      "message": [
+    "We first make our habits, and then our habits make us.",
+    "The important work of moving the world forward does not wait to be done by perfect men.",
+    "To dare is to lose one's footing momentarily. Not to dare is to lose oneself.",
+    "Action speak louder than words.",    
+	"Confidence is not about being loud; it's about being present and comfortable in your own space.",
+    "True confidence comes from knowledge and experience, not from theatrical displays of power.",
+    "To walk confidently into any room, first command yourself; the rest will follow.",
+    "Confidence grows when we dare to step beyond our comfort zones and embrace new challenges.",
+    "The cadence of your speech can be as powerful as the words you choose—control the pace, and you control the room.",
+    "Confidence isn't a trait we're born with; it's a skill we can nurture and develop over time.",
+    "Taking time to respond shows control and confidence; don't rush your answers or actions.",
+    "Even the most subtle gestures, like a steady gaze or smooth movement, can convey a powerful sense of confidence.",
+    "When we are confident, we convey our message once—clearly and effectively—without the need to convince.",
+    "Master your environment and your presence, and you will naturally project the confidence you seek."
+
+], 
+      "interval_minutes": 60
+    },
+    {
+      "message": "You did great today! Now, take a break, write down what you did, think about your next steps, and get ready to exercise.",
+      "time": ["11:50","15:10", "17:10"]
+    }
+  ]
+}
