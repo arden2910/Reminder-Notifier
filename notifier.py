@@ -3,78 +3,75 @@ import time
 import schedule
 import random
 from tkinter import Tk, Label, Button, Toplevel, messagebox
-import screeninfo  # 用於獲取螢幕資訊
+import screeninfo  # Used to get screen information
 
-
-# 讀取 JSON 配置
+# Load JSON configuration
 def load_config(file_path):
     with open(file_path, 'r', encoding='utf-8') as file:
         return json.load(file)
 
-
-# 顯示自訂通知視窗
+# Display custom notification window
 def show_notification(message):
-    # 獲取螢幕的解析度資訊
+    # Get screen resolution information
     screen = screeninfo.get_monitors()[0]
     screen_width = screen.width
     screen_height = screen.height
 
-    # 建立一個新的彈出視窗
+    # Create a new popup window
     popup = Toplevel()
-    popup.title("提醒")
+    popup.title("Reminder")
 
-    # 設定視窗大小
+    # Set window size
     window_width = 300
     window_height = 150
 
-    # 計算彈出視窗的位置 (貼近右下角的工作列)
-    x_position = screen_width - window_width - 20  # 貼近右側
-    y_position = screen_height - window_height - 80  # 貼近下側，並考慮工作列高度
+    # Calculate the position of the popup (close to the bottom right taskbar)
+    x_position = screen_width - window_width - 20  # Near the right side
+    y_position = screen_height - window_height - 80  # Near the bottom, considering the taskbar height
 
-    # 設定視窗大小和位置
+    # Set the size and position of the window
     popup.geometry(f"{window_width}x{window_height}+{x_position}+{y_position}")
 
-    # 設置訊息標籤
+    # Set message label
     label = Label(popup, text=message, wraplength=280)
     label.pack(pady=10)
 
-    # 建立按鈕以關閉視窗
-    button = Button(popup, text="好的，没問題", command=popup.destroy)
+    # List of energetic phrases
+    button_texts = ["Got it! ", "Great", "Let's go!!", "Ready","Let's do this!","Ok","Sound good"]
+
+    # Create a button to close the window with random text
+    button = Button(popup, text=random.choice(button_texts), command=popup.destroy)
     button.pack(pady=5)
 
-    # 保持彈出視窗在頂層
+    # Keep the popup window on top
     popup.attributes('-topmost', True)
 
-    # 確保主視窗不阻擋
+    # Ensure the main window does not block
     popup.mainloop()
 
-
-# 隨機選擇提醒訊息
+# Randomly select a reminder message
 def select_random_message(messages):
     if isinstance(messages, list):
         return random.choice(messages)
-    return messages  # 如果不是列表，直接返回訊息
+    return messages  # If not a list, return the message directly
 
-
-# 設置間隔提醒
+# Set interval reminders
 def set_interval_reminder(messages, minutes):
     message = select_random_message(messages)
     schedule.every(minutes).minutes.do(lambda: show_notification(message))
 
-
-# 設置定時提醒
+# Set time-based reminders
 def set_time_reminder(messages, times):
     for time in times:
         message = select_random_message(messages)
         schedule.every().day.at(time).do(lambda: show_notification(message))
 
-
-# 顯示初始確認視窗
+# Display initial confirmation window
 def show_initial_confirmation(config):
     root = Tk()
-    root.withdraw()  # 隱藏主視窗
+    root.withdraw()  # Hide the main window
 
-    # 取得提醒訊息和時間設定，組成確認訊息
+    # Retrieve reminder messages and timing settings, and form the confirmation message
     reminders_info = '\n'.join(
         [f"Message: {reminder['message']}, "
          f"Interval: {reminder.get('interval_minutes', 'N/A')} minutes, "
@@ -84,23 +81,22 @@ def show_initial_confirmation(config):
 
     confirm_message = f"Please confirm your config:\n\n{reminders_info}\n\nIs this correct?"
 
-    # 顯示確認對話框
+    # Display the confirmation dialog box
     user_response = messagebox.askyesno("Config Confirmation", confirm_message)
     if not user_response:
         messagebox.showinfo("Reminder Notifier", "Please update your config and restart the program.")
         root.destroy()
-        exit()  # 結束程式
+        exit()  # Exit the program
 
-    root.destroy()  # 關閉對話框
+    root.destroy()  # Close the dialog box
 
-
-# 主程式
+# Main program
 def main():
     config = load_config('config.json')
-    show_initial_confirmation(config)  # 確認設定
+    show_initial_confirmation(config)  # Confirm settings
     reminders = config.get('reminders', [])
 
-    # 根據 JSON 配置設置提醒
+    # Set reminders according to JSON configuration
     for reminder in reminders:
         messages = reminder.get('message')
         interval_minutes = reminder.get('interval_minutes')
@@ -111,11 +107,10 @@ def main():
         if times:
             set_time_reminder(messages, times)
 
-    # 執行排程
+    # Run the scheduler
     while True:
         schedule.run_pending()
         time.sleep(1)
-
 
 if __name__ == '__main__':
     main()
